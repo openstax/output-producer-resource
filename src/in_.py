@@ -16,12 +16,17 @@ def in_(dest_path, in_stream):
     event = api.get_event(api_root, event_id)
     msg("Event Returned: {}", event)
 
+    content_server = event["content_server"]["hostname"]
+
     # Write out files
     with open(os.path.join(dest_path, "id"), "w") as file:
         file.write(str(event_id))
 
     with open(os.path.join(dest_path, "collection_id"), "w") as file:
         file.write(event["collection_id"])
+
+    with open(os.path.join(dest_path, "content_server"), "w") as file:
+        file.write(content_server)
 
     with open(os.path.join(dest_path, "event.json"), "w") as file:
         json.dump(event, file)

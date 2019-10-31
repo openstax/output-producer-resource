@@ -1,4 +1,4 @@
-from setuptools import find_packages, setup
+from setuptools import setup
 import os
 
 HERE = os.path.abspath(os.path.dirname(__file__))
@@ -13,7 +13,7 @@ def read_readme():
 
 setup(
     name="workflow-event-resource",
-    version='0.1.0',
+    version='0.1.1',
     description='Concourse CI resource for Content Event Service',
     long_description=read_readme(),
     url='',

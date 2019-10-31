@@ -8,7 +8,7 @@ help_submake:
 	@echo "make test                  Run the tests"
 
 ORG_NAME := openstax
-VERSION := 0.1.0
+VERSION := 0.1.1
 NAMESPACE := workflow-event-resource
 BUILD_ARGS := $(BUILD_ARGS)
 MAJOR := $(word 1,$(subst ., ,$(VERSION)))

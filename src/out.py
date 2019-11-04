@@ -15,11 +15,16 @@ def out(src_path, in_stream):
     id_path = data.pop("id")
 
     msg("Input: {}", input)
-    msg("Params: {}", data)
 
     with open(os.path.join(src_path, id_path), "r") as infile:
         id = infile.read()
 
+    if data.get("pdf_url"):
+        with open(os.path.join(src_path, "artifacts/pdf_url"), "r") as infile:
+            pdf_url = infile.read()
+            data["pdf_url"] = pdf_url
+
+    msg("Params: {}", data)
     msg(f"Updating status of event id {id}")
 
     response = update_event(input["source"]["api_root"], id, data)

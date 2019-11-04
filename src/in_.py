@@ -3,7 +3,7 @@ import os
 import sys
 
 from src import event_api as api
-from src.utils import msg
+from src.utils import msg, write_file
 
 
 def in_(dest_path, in_stream):
@@ -16,20 +16,16 @@ def in_(dest_path, in_stream):
     event = api.get_event(api_root, event_id)
     msg("Event Returned: {}", event)
 
+    collection_id = event["collection_id"]
+    collection_version = event["version"] or "latest"
     content_server = event["content_server"]["hostname"]
 
     # Write out files
-    with open(os.path.join(dest_path, "id"), "w") as file:
-        file.write(str(event_id))
-
-    with open(os.path.join(dest_path, "collection_id"), "w") as file:
-        file.write(event["collection_id"])
-
-    with open(os.path.join(dest_path, "content_server"), "w") as file:
-        file.write(content_server)
-
-    with open(os.path.join(dest_path, "event.json"), "w") as file:
-        json.dump(event, file)
+    write_file(os.path.join(dest_path, "id"), event_id)
+    write_file(os.path.join(dest_path, "collection_id"), collection_id)
+    write_file(os.path.join(dest_path, "version"), collection_version)
+    write_file(os.path.join(dest_path, "content_server"), content_server)
+    write_file(os.path.join(dest_path, "event.json"), event)
 
     return {"version": {"id": event_id}}
 

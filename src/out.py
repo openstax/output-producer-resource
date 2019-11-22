@@ -19,8 +19,9 @@ def out(src_path, in_stream):
     with open(os.path.join(src_path, id_path), "r") as infile:
         id = infile.read()
 
-    if data.get("pdf_url"):
-        with open(os.path.join(src_path, "artifacts/pdf_url"), "r") as infile:
+    pdf_url = data.get("pdf_url")
+    if pdf_url:
+        with open(os.path.join(src_path, pdf_url), "r") as infile:
             pdf_url = infile.read()
             data["pdf_url"] = pdf_url
 

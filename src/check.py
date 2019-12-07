@@ -1,7 +1,7 @@
 import json
 import sys
 
-from src.event_api import get_events
+from src.cops_api import get_jobs
 from src.utils import msg
 
 
@@ -10,17 +10,17 @@ def check(in_stream):
     api_root = input["source"]["api_root"]
     status_id = int(input["source"]["status_id"])
 
-    events = get_events(api_root)
-    msg("Events: {}", events)
+    jobs = get_jobs(api_root)
+    msg("jobs: {}", jobs)
     msg("Inputs: {}", input)
 
-    events = [event for event in events if int(event["status_id"]) == status_id]
+    jobs = [job for job in jobs if int(job["status_id"]) == status_id]
 
     if input["version"]:
         previous_id = input["version"]["id"]
-        events = [event for event in events if int(event["id"]) > int(previous_id)]
+        jobs = [job for job in jobs if int(job["id"]) > int(previous_id)]
 
-    return [{"id": event["id"]} for event in events]
+    return [{"id": job["id"]} for job in jobs]
 
 
 def main():

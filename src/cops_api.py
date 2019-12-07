@@ -9,19 +9,19 @@ def build_url(api_root, *args):
     return "/".join(parts)
 
 
-def get_events(api_root):
-    url = build_url(api_root, "events")
+def get_jobs(api_root):
+    url = build_url(api_root, "jobs")
     response = requests.get(url)
     return response.json()
 
 
-def get_event(api_root, event_id):
-    url = build_url(api_root, "events", event_id)
+def get_job(api_root, job_id):
+    url = build_url(api_root, "jobs", job_id)
     response = requests.get(url)
     return response.json()
 
 
-def update_event(api_root, event_id, data):
-    url = build_url(api_root, "events", event_id)
+def update_job(api_root, job_id, data):
+    url = build_url(api_root, "jobs", job_id)
     response = requests.put(url, data=json.dumps(data))
     return response.json()

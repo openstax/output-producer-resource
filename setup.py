@@ -12,11 +12,11 @@ def read_readme():
 
 
 setup(
-    name="workflow-event-resource",
-    version='0.1.1',
-    description='Concourse CI resource for Content Event Service',
+    name="output-producer-resource",
+    version='1.0.0',
+    description='Concourse CI resource for Content Output Producer Service (COPS)',
     long_description=read_readme(),
-    url='',
+    url='https://github.com/openstax/output-producer-resource',
     author='OpenStax Content Engineering',
     license='AGPLv3.0',
     packages=['tests', 'src'],

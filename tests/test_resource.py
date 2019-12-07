@@ -40,7 +40,7 @@ def make_input_stream(version, **kwargs):
 class TestCheck(object):
 
     @vcr.use_cassette("tests/cassettes/test_check.yaml")
-    def test_edge_case_queued_events(self):
+    def test_edge_case_queued_jobs(self):
         version = None
 
         in_stream = make_input_stream(version, status_id=1)
@@ -49,7 +49,7 @@ class TestCheck(object):
         assert result == [{'id': '6'}, {'id': '7'}, {'id': '9'}, {'id': '10'}, {'id': '11'}]
 
     @vcr.use_cassette("tests/cassettes/test_check.yaml")
-    def test_edge_case_queued_no_events(self):
+    def test_edge_case_queued_no_jobs(self):
         version = None
 
         in_stream = make_input_stream(version, status_id=5)
@@ -58,7 +58,7 @@ class TestCheck(object):
         assert result == []
 
     @vcr.use_cassette("tests/cassettes/test_check.yaml")
-    def test_has_newest_event(self):
+    def test_has_newest_job(self):
         version = {"id": 10}
 
         in_stream = make_input_stream(version, status_id=1)
@@ -67,7 +67,7 @@ class TestCheck(object):
         assert result == [{"id": "11"}]
 
     @vcr.use_cassette("tests/cassettes/test_check.yaml")
-    def test_has_newer_events(self):
+    def test_has_newer_jobs(self):
         version = {"id": 9}
 
         in_stream = make_input_stream(version, status_id=1)
@@ -88,11 +88,11 @@ class TestIn(object):
         result = in_.in_(dest_path, in_stream)
         assert result == version
 
-        event_id = read_file(os.path.join(dest_path, "id"))
-        assert event_id == version["version"]["id"]
+        job_id = read_file(os.path.join(dest_path, "id"))
+        assert job_id == version["version"]["id"]
 
-        event_json = read_file(os.path.join(dest_path, "event.json"))
-        assert event_json == read_file(os.path.join(DATA_DIR, "event.json"))
+        job_json = read_file(os.path.join(dest_path, "job.json"))
+        assert job_json == read_file(os.path.join(DATA_DIR, "job.json"))
 
         collection_id = read_file(os.path.join(dest_path, "collection_id"))
         assert collection_id == read_file(os.path.join(DATA_DIR, "collection_id"))

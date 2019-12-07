@@ -1,63 +1,63 @@
-# workflow-event-resource
+# output-producer-resource
 
 ## Examples
 
 ```yaml
 resource_types:
-  - name: workflow-events
+  - name: cops-jobs
     type: docker-image
     source:
-      repository: openstax/workflow-event-resource
+      repository: openstax/output-producer-resource
 
 resources:
-  - name: workflow-events-queued
-    type: workflow-events
+  - name: cops-jobs-queued
+    type: cops-jobs
     source:
       api_root: https://cc1.cnx.org/api
       status_id: 1
 
-  - name: event-update
-    type: workflow-events
+  - name: job-update
+    type: cops-jobs
     source:
       api_root: https://cc1.cnx.org/api
 ```
 
-## `get`: Get the latest events from service
+## `get`: Get the latest jobs from service
 
 ### Files created
 
-* `id`: The event id
-* `collection_id`: The collection id for the event
-* `event.json`: All the api data for the event
+* `id`: The job id
+* `collection_id`: The collection id for the job
+* `job.json`: All the api data for the job
 
 ### Example
 
 ```yaml
 plan:
-  - get: workflow-events-queued
+  - get: cops-jobs-queued
     trigger: true
     version: every
 ```
 
-## `put`: Update the event through the web api
+## `put`: Update the job through the web api
 
-* `status_id`: The id of the status to change the event
+* `status_id`: The id of the status to change the job
 * `pdf_url`: The url location of the pdf on S3
 
 ### Example
 
 ```yaml
-- put: event-update
+- put: job-update
   params:
-    id: workflow-events-queued/id
+    id: cops-jobs-queued/id
     status_id: "2"
 ```
 
 ## Configure Dev Environment
 
-Change into the workflow-event-resource working directory
+Change into the output-producer-resource working directory
 
-`cd ./workflow-event-resource`
+`cd ./output-producer-resource`
 
 Create a virtualenv:
 

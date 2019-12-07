@@ -2,7 +2,7 @@ import os
 import sys
 import json
 
-from src.event_api import update_event
+from src.cops_api import update_job
 from src.utils import msg
 
 
@@ -11,7 +11,7 @@ def out(src_path, in_stream):
     data = input["params"]
 
     # Remove the id which represents the path in resource.
-    # Keep the rest of the information to update the event.
+    # Keep the rest of the information to update the job.
     id_path = data.pop("id")
 
     msg("Input: {}", input)
@@ -26,9 +26,9 @@ def out(src_path, in_stream):
             data["pdf_url"] = pdf_url
 
     msg("Params: {}", data)
-    msg(f"Updating status of event id {id}")
+    msg(f"Updating status of job id {id}")
 
-    response = update_event(input["source"]["api_root"], id, data)
+    response = update_job(input["source"]["api_root"], id, data)
 
     return {"version": {"id": response["id"]}}
 

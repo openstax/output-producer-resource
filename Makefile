@@ -1,6 +1,6 @@
 .PHONY: help_submake
 help_submake:
-	@echo "make build-sdist           Build the source distribution of the content event resource"
+	@echo "make build-sdist           Build the source distribution of the content job resource"
 	@echo "make build-image           Build the image according to the version number"
 	@echo "make tag-latest            Tag the currently built image with latest"
 	@echo "make release-latest        Release the latest tagged image to docker hub"
@@ -8,8 +8,8 @@ help_submake:
 	@echo "make test                  Run the tests"
 
 ORG_NAME := openstax
-VERSION := 0.1.1
-NAMESPACE := workflow-event-resource
+VERSION := 1.0.0
+NAMESPACE := output-producer-resource
 BUILD_ARGS := $(BUILD_ARGS)
 MAJOR := $(word 1,$(subst ., ,$(VERSION)))
 MINOR := $(word 2,$(subst ., ,$(VERSION)))

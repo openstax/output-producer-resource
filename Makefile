@@ -38,4 +38,4 @@ release:
 
 .PHONY: test
 test:
-	pytest tests/test_resource.py -vvv
+	pytest tests/test_resource.py -vvv --cov src/ --cov-report html --cov-report term

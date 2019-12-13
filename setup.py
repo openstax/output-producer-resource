@@ -24,7 +24,8 @@ setup(
     extras_require={
         'dev': [
             'pytest',
-            'pytest-vcr'
+            'pytest-vcr',
+            'pytest-cov'
         ]
     },
     tests_require=['pytest', 'pytest-vcr'],

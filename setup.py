@@ -24,7 +24,9 @@ setup(
     extras_require={
         'dev': [
             'pytest',
-            'pytest-vcr'
+            'pytest-vcr',
+            'pytest-cov',
+            'flake8'
         ]
     },
     tests_require=['pytest', 'pytest-vcr'],

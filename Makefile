@@ -6,6 +6,7 @@ help_submake:
 	@echo "make release-latest        Release the latest tagged image to docker hub"
 	@echo "make release               Release the tagged version image to docker hub"
 	@echo "make test                  Run the tests"
+	@echo "make lint                  Lint source and test files"
 
 ORG_NAME := openstax
 VERSION := 1.0.0
@@ -36,6 +37,10 @@ release:
 	@if ! docker images $(ORG_NAME)/$(NAMESPACE) | awk '{ print $$2 }' | grep -q -F $(VERSION); then echo "$(ORG_NAME)/$(NAMESPACE) version $(VERSION) is not yet built. Please run 'make build-image'"; false; fi
 	docker push $(ORG_NAME)/$(NAMESPACE):$(VERSION)
 
+.PHONY: lint
+lint:
+	flake8 src/ tests/
+
 .PHONY: test
 test:
-	pytest tests/test_resource.py -vvv
+	pytest tests/test_resource.py -vvv --cov src/ --cov-report html --cov-report term

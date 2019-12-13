@@ -25,7 +25,8 @@ setup(
         'dev': [
             'pytest',
             'pytest-vcr',
-            'pytest-cov'
+            'pytest-cov',
+            'flake8'
         ]
     },
     tests_require=['pytest', 'pytest-vcr'],

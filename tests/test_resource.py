@@ -46,7 +46,11 @@ class TestCheck(object):
         in_stream = make_input_stream(version, status_id=1)
         result = check.check(in_stream)
 
-        assert result == [{'id': '6'}, {'id': '7'}, {'id': '9'}, {'id': '10'}, {'id': '11'}]
+        assert result == [{'id': '6'},
+                          {'id': '7'},
+                          {'id': '9'},
+                          {'id': '10'},
+                          {'id': '11'}]
 
     @vcr.use_cassette("tests/cassettes/test_check.yaml")
     def test_edge_case_queued_no_jobs(self):

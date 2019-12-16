@@ -11,9 +11,14 @@ def read_readme():
         return f.read()
 
 
+def get_version():
+    with open(os.path.join(HERE, 'VERSION'), 'r') as f:
+        return f.read()
+
+
 setup(
     name="output-producer-resource",
-    version='1.0.0',
+    version=get_version(),
     description='Concourse CI resource for Content Output Producer Service (COPS)',
     long_description=read_readme(),
     url='https://github.com/openstax/output-producer-resource',

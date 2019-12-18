@@ -3,7 +3,9 @@ import sys
 
 
 def msg(msg, *args, **kwargs):
-    print(msg.format(*args, **kwargs), file=sys.stderr)
+    if args or kwargs:
+        msg = msg.format(*args, **kwargs)
+    print(msg, file=sys.stderr)
 
 
 def write_file(filepath, data):

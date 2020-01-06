@@ -25,7 +25,7 @@ def in_(dest_path, in_stream):
     write_file(os.path.join(dest_path, "id"), job_id)
     write_file(os.path.join(dest_path, "collection_id"), collection_id)
     write_file(os.path.join(dest_path, "version"), collection_version)
-    write_file(os.path.join(dest_path, "style"), collection_style)
+    write_file(os.path.join(dest_path, "collection_style"), collection_style)
     write_file(os.path.join(dest_path, "content_server"), content_server)
     write_file(os.path.join(dest_path, "job.json"), job)
 

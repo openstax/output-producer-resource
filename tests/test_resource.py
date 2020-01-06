@@ -104,5 +104,8 @@ class TestIn(object):
         collection_version = read_file(os.path.join(dest_path, "version"))
         assert collection_version == read_file(os.path.join(DATA_DIR, "version"))
 
+        collection_style = read_file(os.path.join(dest_path, "collection_style"))
+        assert collection_style == read_file(os.path.join(DATA_DIR, "collection_style"))
+
         content_server = read_file(os.path.join(dest_path, "content_server"))
         assert content_server == read_file(os.path.join(DATA_DIR, "content_server"))

@@ -11,7 +11,7 @@ def check(in_stream):
     status_id = input["source"].get("status_id")
 
     if not status_id:
-        return [input["version"]]
+        return [input["version"] or []]
     else:
         jobs = get_jobs(api_root)
         msg("jobs: {}", jobs)

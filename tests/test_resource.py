@@ -79,6 +79,24 @@ class TestCheck(object):
 
         assert result == [{'id': '10'}, {'id': '11'}]
 
+    @vcr.use_cassette("tests/cassettes/test_check.yaml")
+    def test_check_without_status_id(self):
+        version = {"id": 9}
+
+        in_stream = make_input_stream(version)
+        result = check.check(in_stream)
+
+        assert result == [version]
+
+    @vcr.use_cassette("tests/cassettes/test_check.yaml")
+    def test_check_when_status_id_is_zero(self):
+        version = {"id": 2}
+
+        in_stream = make_input_stream(version, status_id=0)
+        result = check.check(in_stream)
+
+        assert result == [version]
+
 
 class TestIn(object):
     @vcr.use_cassette('tests/cassettes/test_in.yaml')

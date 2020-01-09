@@ -9,7 +9,7 @@ help_submake:
 	@echo "make lint                  Lint source and test files"
 
 ORG_NAME := openstax
-VERSION := $(cat VERSION)
+VERSION := $$(cat VERSION)
 NAMESPACE := output-producer-resource
 BUILD_ARGS := $(BUILD_ARGS)
 MAJOR := $(word 1,$(subst ., ,$(VERSION)))

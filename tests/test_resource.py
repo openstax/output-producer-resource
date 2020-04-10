@@ -97,6 +97,26 @@ class TestCheck(object):
 
         assert result == [version]
 
+    @vcr.use_cassette("tests/cassettes/test_check.yaml")
+    def test_check_without_version_with_status(self):
+        payload = make_input(None, status_id=5)
+        del payload["version"]
+
+        in_stream = make_stream(payload)
+        result = check.check(in_stream)
+
+        assert result == []
+
+    @vcr.use_cassette("tests/cassettes/test_check.yaml")
+    def test_check_without_version_without_status(self):
+        payload = make_input(None)
+        del payload["version"]
+
+        in_stream = make_stream(payload)
+        result = check.check(in_stream)
+
+        assert result == []
+
 
 class TestIn(object):
     @vcr.use_cassette('tests/cassettes/test_in.yaml')

@@ -28,7 +28,7 @@ setup(
     install_requires=requirements,
     extras_require={
         'dev': [
-            'pytest',
+            'pytest>=4.6',
             'pytest-vcr',
             'pytest-cov',
             'flake8'

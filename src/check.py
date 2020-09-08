@@ -9,6 +9,7 @@ def check(in_stream):
     input = json.load(in_stream)
     api_root = input["source"]["api_root"]
     status_id = input["source"].get("status_id")
+    job_type_id = input["source"].get("job_type_id")
     version = input.get("version")
 
     if not status_id:
@@ -19,6 +20,9 @@ def check(in_stream):
         msg("Inputs: {}", input)
 
         jobs = [job for job in jobs if int(job["status_id"]) == status_id]
+
+        if job_type_id is not None:
+            jobs = [job for job in jobs if int(job.get("job_type_id")) == job_type_id]
 
         if version:
             previous_id = version["id"]

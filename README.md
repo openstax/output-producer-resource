@@ -71,6 +71,28 @@ Install dependencies:
 
 `make test`
 
+### Updating VCR cassettes for unit tests
+
+The VCR cassettes used for unit tests are generated using a local COPS environment. In order to create new cassettes (e.g. for API changes, etc.):
+
+1. Setup a local environment using directions [here](https://github.com/openstax/output-producer-service/blob/master/README.md). Make sure it is in a clean, vanilla state (e.g. make sure your COPS UI has no jobs listed).
+
+2. Delete the existing cassettes which you'd like to update
+
+3. Run the utility script to initialize your local COPS environment with jobs (you may need / want to update this script as well depending upon the changes):
+
+```
+python tests/cassettes/init_local_cops.py
+```
+
+4. Run the tests via `make test` to generate cassette files
+
+5. (If necessary) Update the `job.json` file by running:
+
+```
+curl http://localhost/api/jobs/1 -o tests/data/job.json
+```
+
 ### Build the docker image for development
 
 `make build-image`

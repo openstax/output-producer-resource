@@ -5,7 +5,7 @@ import tempfile
 
 import vcr
 
-from src import check, in_
+from src import check, in_, out
 
 DATA_DIR = os.path.join(os.path.realpath(os.path.dirname(__file__)), "data")
 
@@ -13,6 +13,11 @@ DATA_DIR = os.path.join(os.path.realpath(os.path.dirname(__file__)), "data")
 def read_file(filepath):
     with open(filepath, "r") as infile:
         return infile.read()
+
+
+def write_file(filepath, data):
+    with open(filepath, "w") as outfile:
+        outfile.write(data)
 
 
 def make_stream(json_obj):
@@ -156,3 +161,38 @@ class TestIn(object):
 
         content_server = read_file(os.path.join(dest_path, "content_server"))
         assert content_server == read_file(os.path.join(DATA_DIR, "content_server"))
+
+
+class TestOut(object):
+
+    @vcr.use_cassette("tests/cassettes/test_out.yaml")
+    def test_update_job_status_and_url(self):
+        id = "1"
+        pdf_url = "http://dummy.cops.org/col12345-latest.pdf"
+        src_path = tempfile.mkdtemp()
+
+        id_filepath = os.path.join(src_path, "id")
+        pdf_url_filepath = os.path.join(src_path, "pdf_url")
+
+        write_file(id_filepath, id)
+        write_file(pdf_url_filepath, pdf_url)
+
+        params = {
+            "id": "id",
+            "pdf_url": "pdf_url",
+            "status_id": "5"
+        }
+
+        payload = make_input(None)
+        del payload["version"]
+        payload["params"] = params
+
+        in_stream = make_stream(payload)
+
+        result = out.out(src_path, in_stream)
+
+        assert result == {
+            "version": {
+                "id": "1"
+            }
+        }

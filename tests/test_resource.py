@@ -114,6 +114,15 @@ class TestCheck(object):
 
         assert result == []
 
+    @vcr.use_cassette("tests/cassettes/test_check.yaml")
+    def test_check_with_job_type(self):
+        version = None
+
+        in_stream = make_input_stream(version, status_id=1, job_type_id=2)
+        result = check.check(in_stream)
+
+        assert result == [{'id': '2'}]
+
 
 class TestIn(object):
     @vcr.use_cassette('tests/cassettes/test_in.yaml')

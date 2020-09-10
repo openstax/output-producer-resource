@@ -24,7 +24,7 @@ def make_stream(json_obj):
 
 def make_input(version, **kwargs):
     payload = {"source": {
-        "api_root": "https://cc1.cnx.org/api",
+        "api_root": "http://localhost/api",
     },
         "version": version,
     }
@@ -46,38 +46,35 @@ class TestCheck(object):
         in_stream = make_input_stream(version, status_id=1)
         result = check.check(in_stream)
 
-        assert result == [{'id': '6'},
-                          {'id': '7'},
-                          {'id': '9'},
-                          {'id': '10'},
-                          {'id': '11'}]
+        assert result == [{'id': '2'},
+                          {'id': '1'}]
 
     @vcr.use_cassette("tests/cassettes/test_check.yaml")
     def test_edge_case_queued_no_jobs(self):
         version = None
 
-        in_stream = make_input_stream(version, status_id=5)
+        in_stream = make_input_stream(version, status_id=6)
         result = check.check(in_stream)
 
         assert result == []
 
     @vcr.use_cassette("tests/cassettes/test_check.yaml")
     def test_has_newest_job(self):
-        version = {"id": 10}
+        version = {"id": 1}
 
         in_stream = make_input_stream(version, status_id=1)
         result = check.check(in_stream)
 
-        assert result == [{"id": "11"}]
+        assert result == [{"id": "2"}]
 
     @vcr.use_cassette("tests/cassettes/test_check.yaml")
     def test_has_newer_jobs(self):
-        version = {"id": 9}
+        version = {"id": 0}
 
         in_stream = make_input_stream(version, status_id=1)
         result = check.check(in_stream)
 
-        assert result == [{'id': '10'}, {'id': '11'}]
+        assert result == [{'id': '2'}, {'id': '1'}]
 
     @vcr.use_cassette("tests/cassettes/test_check.yaml")
     def test_check_without_status_id(self):
@@ -105,7 +102,7 @@ class TestCheck(object):
         in_stream = make_stream(payload)
         result = check.check(in_stream)
 
-        assert result == []
+        assert result == [{'id': '10'}, {'id': '9'}]
 
     @vcr.use_cassette("tests/cassettes/test_check.yaml")
     def test_check_without_version_without_status(self):
@@ -133,8 +130,11 @@ class TestIn(object):
         job_id = read_file(os.path.join(dest_path, "id"))
         assert job_id == version["version"]["id"]
 
-        job_json = read_file(os.path.join(dest_path, "job.json"))
-        assert job_json == read_file(os.path.join(DATA_DIR, "job.json"))
+        job_json = json.loads(read_file(os.path.join(dest_path, "job.json")))
+        expected_json = json.loads(
+            read_file(os.path.join(DATA_DIR, "job.json"))
+        )
+        assert job_json == expected_json
 
         collection_id = read_file(os.path.join(dest_path, "collection_id"))
         assert collection_id == read_file(os.path.join(DATA_DIR, "collection_id"))

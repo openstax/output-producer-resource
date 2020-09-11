@@ -5,7 +5,7 @@ import tempfile
 
 import vcr
 
-from src import check, in_
+from src import check, in_, out
 
 DATA_DIR = os.path.join(os.path.realpath(os.path.dirname(__file__)), "data")
 
@@ -13,6 +13,11 @@ DATA_DIR = os.path.join(os.path.realpath(os.path.dirname(__file__)), "data")
 def read_file(filepath):
     with open(filepath, "r") as infile:
         return infile.read()
+
+
+def write_file(filepath, data):
+    with open(filepath, "w") as outfile:
+        outfile.write(data)
 
 
 def make_stream(json_obj):
@@ -24,7 +29,7 @@ def make_stream(json_obj):
 
 def make_input(version, **kwargs):
     payload = {"source": {
-        "api_root": "https://cc1.cnx.org/api",
+        "api_root": "http://localhost/api",
     },
         "version": version,
     }
@@ -46,38 +51,35 @@ class TestCheck(object):
         in_stream = make_input_stream(version, status_id=1)
         result = check.check(in_stream)
 
-        assert result == [{'id': '6'},
-                          {'id': '7'},
-                          {'id': '9'},
-                          {'id': '10'},
-                          {'id': '11'}]
+        assert result == [{'id': '2'},
+                          {'id': '1'}]
 
     @vcr.use_cassette("tests/cassettes/test_check.yaml")
     def test_edge_case_queued_no_jobs(self):
         version = None
 
-        in_stream = make_input_stream(version, status_id=5)
+        in_stream = make_input_stream(version, status_id=6)
         result = check.check(in_stream)
 
         assert result == []
 
     @vcr.use_cassette("tests/cassettes/test_check.yaml")
     def test_has_newest_job(self):
-        version = {"id": 10}
+        version = {"id": 1}
 
         in_stream = make_input_stream(version, status_id=1)
         result = check.check(in_stream)
 
-        assert result == [{"id": "11"}]
+        assert result == [{"id": "2"}]
 
     @vcr.use_cassette("tests/cassettes/test_check.yaml")
     def test_has_newer_jobs(self):
-        version = {"id": 9}
+        version = {"id": 0}
 
         in_stream = make_input_stream(version, status_id=1)
         result = check.check(in_stream)
 
-        assert result == [{'id': '10'}, {'id': '11'}]
+        assert result == [{'id': '2'}, {'id': '1'}]
 
     @vcr.use_cassette("tests/cassettes/test_check.yaml")
     def test_check_without_status_id(self):
@@ -105,7 +107,7 @@ class TestCheck(object):
         in_stream = make_stream(payload)
         result = check.check(in_stream)
 
-        assert result == []
+        assert result == [{'id': '10'}, {'id': '9'}]
 
     @vcr.use_cassette("tests/cassettes/test_check.yaml")
     def test_check_without_version_without_status(self):
@@ -116,6 +118,15 @@ class TestCheck(object):
         result = check.check(in_stream)
 
         assert result == []
+
+    @vcr.use_cassette("tests/cassettes/test_check.yaml")
+    def test_check_with_job_type(self):
+        version = None
+
+        in_stream = make_input_stream(version, status_id=1, job_type_id=2)
+        result = check.check(in_stream)
+
+        assert result == [{'id': '2'}]
 
 
 class TestIn(object):
@@ -133,8 +144,11 @@ class TestIn(object):
         job_id = read_file(os.path.join(dest_path, "id"))
         assert job_id == version["version"]["id"]
 
-        job_json = read_file(os.path.join(dest_path, "job.json"))
-        assert job_json == read_file(os.path.join(DATA_DIR, "job.json"))
+        job_json = json.loads(read_file(os.path.join(dest_path, "job.json")))
+        expected_json = json.loads(
+            read_file(os.path.join(DATA_DIR, "job.json"))
+        )
+        assert job_json == expected_json
 
         collection_id = read_file(os.path.join(dest_path, "collection_id"))
         assert collection_id == read_file(os.path.join(DATA_DIR, "collection_id"))
@@ -147,3 +161,38 @@ class TestIn(object):
 
         content_server = read_file(os.path.join(dest_path, "content_server"))
         assert content_server == read_file(os.path.join(DATA_DIR, "content_server"))
+
+
+class TestOut(object):
+
+    @vcr.use_cassette("tests/cassettes/test_out.yaml")
+    def test_update_job_status_and_url(self):
+        id = "1"
+        pdf_url = "http://dummy.cops.org/col12345-latest.pdf"
+        src_path = tempfile.mkdtemp()
+
+        id_filepath = os.path.join(src_path, "id")
+        pdf_url_filepath = os.path.join(src_path, "pdf_url")
+
+        write_file(id_filepath, id)
+        write_file(pdf_url_filepath, pdf_url)
+
+        params = {
+            "id": "id",
+            "pdf_url": "pdf_url",
+            "status_id": "5"
+        }
+
+        payload = make_input(None)
+        del payload["version"]
+        payload["params"] = params
+
+        in_stream = make_stream(payload)
+
+        result = out.out(src_path, in_stream)
+
+        assert result == {
+            "version": {
+                "id": "1"
+            }
+        }

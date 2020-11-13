@@ -19,7 +19,7 @@ def in_(dest_path, in_stream):
     collection_id = job["collection_id"]
     collection_version = job["version"] or "latest"
     collection_style = job["style"]
-    content_server = job["content_server"]["hostname"]
+    content_server = (job["content_server"] or {"hostname": None})["hostname"]
 
     # Write out files
     write_file(os.path.join(dest_path, "id"), job_id)

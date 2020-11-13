@@ -14,6 +14,8 @@ def msg(msg, *args, **kwargs):
 
 
 def write_file(filepath, data):
+    if (data is None):
+        return
     if filepath.endswith(".json"):
         with open(filepath, "w") as file:
             json.dump(data, file)

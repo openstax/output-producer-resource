@@ -25,6 +25,15 @@ def out(src_path, in_stream):
             pdf_url = infile.read()
             data["pdf_url"] = pdf_url
 
+    error_message = data.get("error_message")
+    if not error_message:
+        error_message_file = data.get("error_message_file")
+        if error_message_file:
+            with open(os.path.join(src_path, error_message_file), "r") as infile:
+                error_message_file_data = infile.read()
+                data["error_message"] = error_message_file_data
+            del data["error_message_file"]
+
     msg("Params: {}", data)
     msg(f"Updating status of job id {id}")
 
